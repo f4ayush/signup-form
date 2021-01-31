@@ -1,5 +1,6 @@
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcryptjs");
+const config = require("./config");
 const GoogleStrategy = require("passport-google-oauth20");
 // Load User model
 const checkUser = require("../models/checkUser");
@@ -33,9 +34,8 @@ module.exports = function (passport) {
       {
         // options for google strategy
         callbackURL: "/redirect",
-        clientID:
-          "226612889594-70361oos5r8n8lfm23ahqaado7avisni.apps.googleusercontent.com",
-        clientSecret: "GrB-xRyQk6zEkq-p3BY8EZtL",
+        clientID: config.CLIENT_ID,
+        clientSecret: config.CLIENT_SECRET,
       },
       (accessToken, refreshToken, profile, done) => {
         checkUser.userIdPresent(profile.id).then((data) => {
