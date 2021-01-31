@@ -10,15 +10,6 @@ const app = express();
 // Passport Config
 require("./config/passport")(passport);
 
-// // DB Config
-// const db = require("./config/keys").mongoURI;
-
-// // Connect to MongoDB
-// mongoose
-//   .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
-//   .then(() => console.log("MongoDB Connected"))
-//   .catch((err) => console.log(err));
-
 // EJS
 app.use(expressLayouts);
 app.set("view engine", "ejs");
@@ -38,6 +29,26 @@ app.use(
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
+
+// google auth
+app.use(
+  "/auth/google",
+  passport.authenticate("google", {
+    scope: ["profile"],
+  })
+);
+
+app.get(
+  "/redirect",
+  passport.authenticate("google", {
+    successRedirect: "/dashboard",
+    failureRedirect: "/users/login",
+    failureFlash: true,
+  }),
+  (req, res) => {
+    console.log("logged");
+  }
+);
 
 // Connect flash
 app.use(flash());
